@@ -1,4 +1,4 @@
-require "./lib/you_shall_not_password"
+require "you_shall_not_password"
 require "minitest/autorun"
 
 
