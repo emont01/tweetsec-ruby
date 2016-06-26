@@ -1,3 +1,5 @@
+require "char_helper"
+
 class PasswordScore
 	attr_reader :original_text
 	attr_reader :processed_text
@@ -7,16 +9,8 @@ class PasswordScore
 		@original_text = original_text
 		@processed_text = original_text.downcase
 		
-		case @original_text
-		when "password1"
-			@value = 4
-		when "goat m4n"
-			@value = 15
-		when "s0_0per 5n4k3"
-			@value = 44
-		else
-			@value = 0
-		end
+		parsed_data = CharHelper.parse @processed_text
+		@value = parsed_data['types_count'] * parsed_data['words_count']
 	end
 
 end
