@@ -1,16 +1,29 @@
 require "./lib/you_shall_not_password"
+require "minitest/autorun"
 
-username = nil
-evaluator = nil
 
-Given(/^a valid twitter username "([^"]*)"$/) do |username|
-  step %[using username "#{username}"]
+Given /^a valid twitter username "([^"]*)"$/ do |username|
+	@username = username
 end
 
-When(/^"([^"]*)" send the password "([^"]*)"$/) do |username, password|
-  evaluator = YouShallNotPassword.eval(username, password)
+When /^the user sends a strong password: "([^"]*)"$/ do |password|
+	@password = password
 end
 
-Then(/^the following response should be received "([^"]*)"$/) do |status_text|
-  
+When /^the user sends a weak password: "([^"]*)"$/ do |password|
+	@password = password
+end
+
+When /^the user sends an unacceptable password: "([^"]*)"$/ do |password|
+	@password = password
+end
+
+Then /^the following response should be received "([^"]*)"$/ do |expected|
+	@twitter = Minitest::Mock.new
+	@twitter.expect :update_status, nil, [expected]
+
+	@evaluator = YouShallNotPassword.new @twitter
+	@evaluator.eval @username, @password
+
+	@twitter.verify
 end
