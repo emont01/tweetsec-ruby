@@ -26,21 +26,9 @@ Juwelier::Tasks.new do |gem|
 end
 Juwelier::RubygemsDotOrgTasks.new
 
-require 'rake/testtask'
-Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib' << 'test'
-  test.pattern = 'test/**/test_*.rb'
-  test.verbose = true
-end
-
-desc "Code coverage detail"
-task :simplecov do
-  ENV['COVERAGE'] = "true"
-  Rake::Task['test'].execute
-end
-
-task :default => :test
-
+##
+# Rdoc task
+##
 require 'rdoc/task'
 Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
@@ -50,3 +38,36 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
+##
+# Test tasks
+##
+task :test => [:unit_test, :features] do
+	puts "For unit test only use :unit_test, for features use :features"
+end
+
+##
+# Unit test tasks
+##
+require 'rake/testtask'
+Rake::TestTask.new(:unit_test) do |test|
+  test.libs << 'lib' << 'test'
+  test.pattern = 'test/**/test_*.rb'
+  test.verbose = true
+end
+
+##
+# Features task
+##
+require 'cucumber/rake/task'
+Cucumber::Rake::Task.new(:features) do |test|
+	test.cucumber_opts = "--format pretty"
+end
+
+desc "Code coverage detail"
+task :simplecov do
+  ENV['COVERAGE'] = "true"
+  Rake::Task['test'].execute
+end
+
+task :default => :test

@@ -95,7 +95,7 @@ DEPENDENCIES
   bundler (~> 1.0)
   cucumber
   juwelier (~> 2.1.0)
-  minitest
+  minitest (>= 5)
   mocha
   rdoc (~> 3.12)
   shoulda
